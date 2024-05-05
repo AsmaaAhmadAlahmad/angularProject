@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="app.component.css">
+
+<form action=""  class="right-align" #templateDirvernForm="ngForm" (ngSubmit)="get(templateDirvernForm)">
+<div class="container">
+
+<!-- القسم التالي من أجل  رقم السورة  -->
+<div class="form-group">
+  <label  class="col-1" for="chapterNumber">رقم السورة</label>
+  <select  class="col-2" required ngModel name="chapterNumber" #chapterNumber="ngModel">
+    @for (i of counter(114); track $index)
+     {
+      <!-- قمت بإضافة واحد هنا لجعل الفهرس يبدأ من الواحد وليس من الصفر -->
+        <option value="{{$index+1}}">{{$index+1}}</option>
+     }
+  </select>
+  @if(chapterNumber?.invalid &&
+      chapterNumber?.touched)
+   {
+   <span class="text-danger d-block">Select chapter number</span>
+   }
+</div>
+
+
+<!-- القسم التالي من أجل  رقم الآية  -->
+<div class="form-group">
+  <label  class="col-1" for="verseNumber">رقم الآية</label>
+  <select class="col-2" required ngModel name="verseNumber" id="verseNumber" #verseNumber="ngModel">
+    @for (i of counter(286);  track  $index)
+     {
+      <!-- قمت بإضافة واحد هنا لجعل الفهرس يبدأ من الواحد وليس من الصفر -->
+        <option value="{{$index+1}}">{{$index+1}}</option>
+     }
+  </select>
+  @if(verseNumber?.invalid &&
+      verseNumber?.touched)
+   {
+     <span class="text-danger d-block">Select verse number</span>
+   }
+</div>
+<div class="row">
+  <div class="row-3">
+    <button class="btn btn-primary d-block"  type="submit" [disabled]="!templateDirvernForm.form.valid">ابحث </button>
+  </div>
+</div>
+</div>
+
+@if (!loadingForSpinner) {
+<!-- العنصر التالي ليتم عرض الاستجابة فيه -->
+<div class="response w-50 m-auto text-center" *ngIf="formSubmitted">
+  <p> {{verseResponseToView | json}}</p>
+  <p> {{englishVerseInterpretationResponseToView | json}}</p>
+  <p> {{arabicVerseInterpretationResponseToView | json}}</p>
+
+  <p>Al-Quran - chapter {{chapterNumberToView}}, verse {{verseNumberToView}}</p>
+</div>
+}
+
+@if (!loadingForSpinner) {
+<!-- العنصر التالي ليتم عرض رسالة الخطأ فيه -->
+<div class="text-center alert-danger text-danger w-25 m-auto" *ngIf="!formSubmitted" >
+  {{errorMessage}}
+</div>
+}
+<div class="text-center" *ngIf = "loadingForSpinner">
+  <app-spinner></app-spinner>
+</div>
+
+</form>
+
+
